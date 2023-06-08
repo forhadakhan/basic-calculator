@@ -106,7 +106,22 @@ const BasicCalculator = () => {
     };
 
     const handleEqualsClick = () => {
-
+        try {
+            const lastCharacter = cacheValue.slice(-1);
+            if (isNaN(lastCharacter)) {
+                setDisplayValue('Invalid Expression');
+            } else {
+                const result = evaluate(cacheValue);
+                if (!isFinite(result)) {
+                    setDisplayValue('Division by Zero');
+                } else {
+                    setDisplayValue(result.toString());
+                }
+                setCacheValue((prevValue) => prevValue + '=' + result.toString());
+            }
+        } catch (error) {
+            setDisplayValue('Error');
+        }
     };
 
 
