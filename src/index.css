@@ -1,0 +1,39 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+.btn-equal-height {
+  height: 100%;
+  width: 100%;
+}
+
+.calculator {
+    padding: 5px;
+    background: black;
+    width: 365px;
+    position: relative;
+}
+
+.basic-display {
+    height: 80px;
+    background-color: rgb(0, 0, 0);
+    padding: 5px;
+    width: 365px;
+    color: rgb(255, 255, 255);
+}
+ .s-key  {
+ 	position: relative;
+    height: 65px;
+    width: 80px;
+ }
+
+ .dr-key {
+ 	position: relative;
+    height: 65px;
+    width: 168px;
+ }
+ .dc-key {
+ 	position: absolute;
+    height: 140px;
+    width: 80px;
+    bottom: 10px;
+ }
