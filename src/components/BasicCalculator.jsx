@@ -4,7 +4,7 @@ import { evaluate } from 'mathjs';
 const BasicCalculator = () => {
     const [displayValue, setDisplayValue] = useState('0');
     const [cacheValue, setCacheValue] = useState('0');
-    
+
     const handleClearClick = () => {
         setDisplayValue('0');
         setCacheValue('0');
@@ -73,7 +73,17 @@ const BasicCalculator = () => {
     };
 
     const handleDecimalClick = () => {
-
+        const lastNumber = cacheValue.split(/[-+*/]/).pop();
+        if (isNaN(parseFloat(lastNumber))) {
+            setDisplayValue((prevValue) => prevValue + '0.');
+            setCacheValue((prevValue) => prevValue + '0.');
+        } else if (!lastNumber.includes('.') && !cacheValue.includes('=')) {
+            setDisplayValue((prevValue) => prevValue + '.');
+            setCacheValue((prevValue) => prevValue + '.');
+        } else if (cacheValue.includes('=')) {
+            setDisplayValue('0.');
+            setCacheValue('0.');
+        }
     };
 
     const handleDeleteClick = () => {
