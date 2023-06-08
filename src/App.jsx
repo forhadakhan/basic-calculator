@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import BasicCalculator from './components/BasicCalculator'
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
                     <h1 className='display-6 bg-white'> <i class="bi bi-calculator-fill"></i> Basic Calculator </h1>
                 </div>
 
-                
+                <BasicCalculator />
 
                 <div className="d-flex align-items-center justify-content-center bg-white mt-5 border rounded-3">
                     <p className='font-monospace pt-3 px-4 text-secondary'><a href='https://github.com/forhadakhan/' target='_blank'>@forhadakhan</a> coded it. You may find the code <a href='https://github.com/forhadakhan/basic-calculator' target='_blank'>repository here</a>.</p>
