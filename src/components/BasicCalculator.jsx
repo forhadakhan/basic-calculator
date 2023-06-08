@@ -87,7 +87,22 @@ const BasicCalculator = () => {
     };
 
     const handleDeleteClick = () => {
-
+        if (cacheValue.includes('=')) {
+            return;
+        } else {
+            setCacheValue((prevValue) => {
+                // Remove the last character from the cacheValue
+                const newValue = prevValue.slice(0, -1);
+                // If the cacheValue becomes empty, set it to '0'
+                return newValue === '' ? '0' : newValue;
+            });
+        }
+        setDisplayValue((prevValue) => {
+            // const lastNumber = cacheValue.split(/[-+*/=]/).pop();
+            const newValue = prevValue.slice(0, -1);
+            // If the newValue becomes empty, set it to '0'
+            return newValue === '' ? '0' : newValue;
+        });
     };
 
     const handleEqualsClick = () => {
