@@ -140,24 +140,33 @@ const BasicCalculator = () => {
 
     const handleEqualsClick = () => {
         try {
-          const lastCharacter = cacheValue.slice(-1);
-          const expression = fixExpression(cacheValue);
-          const result = evaluate(expression);
-      
-          if (isNaN(result)) {
-            setDisplayValue('Invalid Expression');
-          } else {
-            if (!isFinite(result)) {
-              setDisplayValue('Division by Zero');
+            const lastCharacter = cacheValue.slice(-1);
+            const expression = fixExpression(cacheValue);
+            const result = evaluate(expression);
+            let roundedResult;
+    
+            if (isNaN(result)) {
+                setDisplayValue('Invalid Expression');
             } else {
-              setDisplayValue(result.toString());
+                if (!isFinite(result)) {
+                    setDisplayValue('Division by Zero');
+                } else {
+                    if (Number.isInteger(result)) {
+                        roundedResult = result;
+                    } else {
+                        roundedResult = result.toFixed(5);
+                    }
+                    setDisplayValue(roundedResult.toString());
+                }
+                setCacheValue((prevValue) => prevValue + '=' + roundedResult.toString());
             }
-            setCacheValue((prevValue) => prevValue + '=' + result.toString());
-          }
         } catch (error) {
-          setDisplayValue('Error');
+            setDisplayValue('Error');
         }
-      };
+    };
+    
+    
+    
       
       // Helper function to fix expression for automatic fixes
       const fixExpression = (expression) => {
