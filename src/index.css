@@ -14,10 +14,12 @@
 }
 
 .basic-display {
-    height: 80px;
+    min-height: 100px;
     background-color: rgb(0, 0, 0);
     padding: 5px;
     width: 365px;
+    overflow-wrap: break-word;
+    /* word-wrap: break-word; */
     color: rgb(255, 255, 255);
 }
  .s-key  {
