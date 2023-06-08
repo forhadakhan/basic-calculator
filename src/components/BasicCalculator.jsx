@@ -42,7 +42,29 @@ const BasicCalculator = () => {
     };
 
     const handleOperatorClick = (operator) => {
-
+        // Check if the displayValue is the result of a previous evaluation
+        if (!cacheValue.includes('=')) {
+            if (operator === '-' && displayValue === '0') {
+                setDisplayValue('-');
+                setCacheValue('-');
+            } else {
+                const lastCharacter = displayValue.slice(-1);
+                if (!isNaN(lastCharacter) || lastCharacter === '.') {
+                    // Concatenate the operator to the cacheValue
+                    setCacheValue((prevValue) => prevValue + operator);
+                    setDisplayValue(operator);
+                } else if (lastCharacter !== operator) {
+                    // Replace the last operator in the cacheValue
+                    setCacheValue((prevValue) => prevValue.slice(0, -1) + operator);
+                    setDisplayValue((prevValue) => prevValue.slice(0, -1) + operator);
+                }
+            }
+        } else {
+            // Split the cacheValue based on '=' and take the value after '='
+            const resultValue = cacheValue.split('=')[1] || '';
+            setCacheValue(resultValue + operator);
+            setDisplayValue(operator);
+        }
     };
 
     const handleDecimalClick = () => {
