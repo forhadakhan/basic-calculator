@@ -46,6 +46,36 @@ const BasicCalculator = () => {
         }
     };
 
+    // Helper function to count occurrences of a substring within a string
+    const countOccurrences = (string, substring) => {
+        const escapedSubstring = substring.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const regex = new RegExp(escapedSubstring, 'g');
+        const matches = string.match(regex);
+        return matches ? matches.length : 0;
+      };
+
+      const handleParenthesisClick = () => {
+        if (!cacheValue.includes('(')) {
+            // If cacheValue has no open parenthesis, add an open parenthesis
+            if (cacheValue === '0') {
+                setCacheValue('(');
+                setDisplayValue('(');
+            } else {
+                setCacheValue((prevValue) => prevValue + '(');
+                setDisplayValue((prevValue) => prevValue + '(');
+            }
+        } else if (countOccurrences(cacheValue, '(') > countOccurrences(cacheValue, ')')) {
+            // If cacheValue has an open parenthesis without a closing one, add a closing parenthesis
+            setCacheValue((prevValue) => prevValue + ')');
+            setDisplayValue((prevValue) => prevValue + ')');
+        } else {
+            // If cacheValue has equal number of open and close parenthesis, add another open parenthesis
+            setCacheValue((prevValue) => prevValue + '(');
+            setDisplayValue((prevValue) => prevValue + '(');
+        }
+    };
+    
+
     const handleOperatorClick = (operator) => {
         // Check if the displayValue is the result of a previous evaluation
         if (!cacheValue.includes('=')) {
@@ -58,10 +88,13 @@ const BasicCalculator = () => {
                     // Concatenate the operator to the cacheValue
                     setCacheValue((prevValue) => prevValue + operator);
                     setDisplayValue(operator);
-                } else if (lastCharacter !== operator) {
+                } else if ((lastCharacter !== operator) && (lastCharacter !== '(') && (lastCharacter !== ')')) {
                     // Replace the last operator in the cacheValue
                     setCacheValue((prevValue) => prevValue.slice(0, -1) + operator);
                     setDisplayValue((prevValue) => prevValue.slice(0, -1) + operator);
+                } else {
+                    setCacheValue((prevValue) => prevValue + operator);
+                    setDisplayValue((prevValue) => prevValue + operator);
                 }
             }
         } else {
@@ -71,6 +104,8 @@ const BasicCalculator = () => {
             setDisplayValue(operator);
         }
     };
+    
+
 
     const handleDecimalClick = () => {
         const lastNumber = cacheValue.split(/[-+*/]/).pop();
@@ -89,41 +124,50 @@ const BasicCalculator = () => {
     const handleDeleteClick = () => {
         if (cacheValue.includes('=')) {
             return;
-        } else {
-            setCacheValue((prevValue) => {
-                // Remove the last character from the cacheValue
-                const newValue = prevValue.slice(0, -1);
-                // If the cacheValue becomes empty, set it to '0'
-                return newValue === '' ? '0' : newValue;
-            });
         }
-        setDisplayValue((prevValue) => {
-            // const lastNumber = cacheValue.split(/[-+*/=]/).pop();
+    
+        setCacheValue((prevValue) => {
             const newValue = prevValue.slice(0, -1);
-            // If the newValue becomes empty, set it to '0'
+            return newValue === '' ? '0' : newValue;
+        });
+    
+        setDisplayValue((prevValue) => {
+            const newValue = prevValue.slice(0, -1);
             return newValue === '' ? '0' : newValue;
         });
     };
+    
 
     const handleEqualsClick = () => {
         try {
-            const lastCharacter = cacheValue.slice(-1);
-            if (isNaN(lastCharacter)) {
-                setDisplayValue('Invalid Expression');
+          const lastCharacter = cacheValue.slice(-1);
+          const expression = fixExpression(cacheValue);
+          const result = evaluate(expression);
+      
+          if (isNaN(result)) {
+            setDisplayValue('Invalid Expression');
+          } else {
+            if (!isFinite(result)) {
+              setDisplayValue('Division by Zero');
             } else {
-                const result = evaluate(cacheValue);
-                if (!isFinite(result)) {
-                    setDisplayValue('Division by Zero');
-                } else {
-                    setDisplayValue(result.toString());
-                }
-                setCacheValue((prevValue) => prevValue + '=' + result.toString());
+              setDisplayValue(result.toString());
             }
+            setCacheValue((prevValue) => prevValue + '=' + result.toString());
+          }
         } catch (error) {
-            setDisplayValue('Error');
+          setDisplayValue('Error');
         }
-    };
-
+      };
+      
+      // Helper function to fix expression for automatic fixes
+      const fixExpression = (expression) => {
+        const fixedExpression = expression
+          .replace(/([\d)])\(/g, '$1*(')
+          .replace(/([*/+-.])-(?!\d)/g, '$10-')
+          .replace(/([*/+-.])-([\d(])/g, '$1-$2');
+        return fixedExpression;
+      };
+      
 
 
 
@@ -139,7 +183,8 @@ const BasicCalculator = () => {
             </div>
             <div className="container calculator border rounded-3">
                 <div className="my-1">
-                    <button className="dr-key btn btn-warning mx-1  fs-4" id="clear" value="AC" onClick={handleClearClick}>AC</button>
+                    <button className="s-key btn btn-warning mx-1  fs-4" id="clear" value="AC" onClick={handleClearClick}>AC</button>
+                    <button className="s-key btn btn-primary m-1  fs-4" id="parenthesis" value="()" onClick={() => handleParenthesisClick('()')}>( )</button>
                     <button className="s-key btn btn-primary m-1  fs-4" id="divide" value="/" onClick={() => handleOperatorClick('/')}>/</button>
                     <button className="s-key btn btn-primary m-1  fs-4" id="multiply" value="x" onClick={() => handleOperatorClick('*')}>x</button>
                 </div>
