@@ -6,31 +6,59 @@ const BasicCalculator = () => {
     const [cacheValue, setCacheValue] = useState('0');
 
     const handleDigitLimit = (value, callback) => {
-        
+        if (value.length <= 24) {
+            callback(value);
+        } else {
+            const lastNumber = cacheValue.split(/[-+*/=]/).pop();
+            setDisplayValue('Digit Limit Met');
+            setTimeout(() => {
+                callback(lastNumber);
+            }, 500);
+        }
     };
 
     const handleNumberClick = (value) => {
-        
+        const lastNumber = cacheValue.split(/[-+*/=]/).pop();
+        if (cacheValue.includes('=')) {
+            setDisplayValue(value);
+            setCacheValue(value);
+        } else if (lastNumber.length < 24) {
+            if (displayValue === '0') {
+                setDisplayValue(value);
+                setCacheValue(value);
+            } else if (isNaN(displayValue)) {
+                setDisplayValue(value);
+                setCacheValue((prevValue) => prevValue + value);
+            } else {
+                setDisplayValue((prevValue) => prevValue + value);
+                setCacheValue((prevValue) => prevValue + value);
+            }
+        } else {
+            handleDigitLimit(displayValue + value, (newValue) => {
+                setDisplayValue(newValue);
+                setCacheValue((prevValue) => prevValue);
+            });
+        }
     };
 
     const handleOperatorClick = (operator) => {
-        
+
     };
 
     const handleDecimalClick = () => {
-       
+
     };
 
     const handleDeleteClick = () => {
-       
+
     };
 
     const handleClearClick = () => {
-       
+
     };
 
     const handleEqualsClick = () => {
-        
+
     };
 
 
