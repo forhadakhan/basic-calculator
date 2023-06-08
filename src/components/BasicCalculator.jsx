@@ -4,6 +4,11 @@ import { evaluate } from 'mathjs';
 const BasicCalculator = () => {
     const [displayValue, setDisplayValue] = useState('0');
     const [cacheValue, setCacheValue] = useState('0');
+    
+    const handleClearClick = () => {
+        setDisplayValue('0');
+        setCacheValue('0');
+    };
 
     const handleDigitLimit = (value, callback) => {
         if (value.length <= 24) {
@@ -72,10 +77,6 @@ const BasicCalculator = () => {
     };
 
     const handleDeleteClick = () => {
-
-    };
-
-    const handleClearClick = () => {
 
     };
 
